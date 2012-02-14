@@ -1,4 +1,4 @@
-# activerecord_cache_
+# activerecord_cache
 
 Basic caching for ActiveRecord models using the Rails low-level cache (`Rails.cache`).
 
