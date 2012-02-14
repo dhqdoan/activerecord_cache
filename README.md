@@ -18,5 +18,5 @@ To enable caching for a model:
 
 Or:
 
-  User.use_activerecord_cache = true
+    User.use_activerecord_cache = true
 
