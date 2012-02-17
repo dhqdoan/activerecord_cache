@@ -11,7 +11,7 @@ module ActiveRecordCache
       
       def records_for_with_caching(ids)
         if klass.use_activerecord_cache && association_key.name == klass.primary_key
-          find_some_through_cache(ids)
+          klass.find_some_through_cache(ids)
         else
           records_for_without_caching(ids) 
         end
