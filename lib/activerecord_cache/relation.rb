@@ -11,7 +11,7 @@ module ActiveRecordCache
         previously_loaded = loaded?
 
         records = to_a_without_caching
-        records.each(&:write_to_cache) if @klass.use_activerecord_cache && !previously_loaded
+        records.each(&:write_to_cache) if @klass.use_activerecord_cache && !previously_loaded && select_values.empty?
         
         records
       end
