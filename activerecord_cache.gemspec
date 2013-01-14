@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
 
   s.licenses = ['MIT']
 
-  s.add_dependency 'rails', ['~> 3.1.3']
+  s.add_dependency 'rails', ['>= 3.1.3', '<= 3.3.0']
 end
