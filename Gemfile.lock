@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    activerecord_cache (0.0.7)
+    activerecord_cache (0.0.8)
       rails (~> 4.0)
 
 GEM
