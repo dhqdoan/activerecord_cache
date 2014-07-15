@@ -14,7 +14,7 @@ module ActiveRecordCache
       def cache_key(id_or_record)
         unless use_activerecord_cache
           message = "ActiveRecord cache is not enabled for #{self.name}"
-          raise ActiveRecordCache::CachingNotEnabled, message
+          raise ActiveRecordCache::CacheNotEnabled, message
         end
 
         if id_or_record.is_a?(ActiveRecord::Base)
@@ -53,7 +53,7 @@ module ActiveRecordCache
         end
 
         if cache_misses.present?
-          records += where(primary_key => cache_misses).all
+          records += where(primary_key => cache_misses).load
         end
 
         records

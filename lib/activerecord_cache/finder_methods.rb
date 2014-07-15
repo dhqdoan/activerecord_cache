@@ -3,39 +3,18 @@ module ActiveRecordCache
     extend ActiveSupport::Concern
 
     included do
-      alias_method_chain :find_by_attributes, :caching
       alias_method_chain :find_some, :caching
       alias_method_chain :find_one, :caching
     end
 
     protected
 
-    def find_by_attributes_with_caching(match, attributes, *args)
-      unless cached_lookup_allowed? && attributes == Array(@klass.primary_key) && (match.finder == :all || !args.first.is_a?(Array))
-        return find_by_attributes_without_caching(match, attributes, *args)
-      end
-
-      param = args.first
-
-      results = case match.finder
-                when :all   then @klass.find_some_through_cache(Array(param))
-                when :first then @klass.find_through_cache(param)
-                when :last  then @klass.find_through_cache(param)
-                end
-
-      results
-    end
-
     def find_some_with_caching(ids)
       return find_some_without_caching(ids) unless cached_lookup_allowed?
 
       results = find_some_through_cache(ids)
 
-      if results.size != ids.size
-        error = "Couldn't find all #{@klass.name.pluralize} with IDs "
-        error << "(#{ids.join(", ")}) (found #{results.size} results, but was looking for #{ids.size})"
-        raise ActiveRecord::RecordNotFound, error
-      end
+      raise_record_not_found_exception!(ids, result.size, ids.size) unless results.size == ids.size
 
       results
     end
@@ -43,11 +22,9 @@ module ActiveRecordCache
     def find_one_with_caching(id)
       return find_one_without_caching(id) unless cached_lookup_allowed?
 
-      record = @klass.find_through_cache(id)
+      record = find_through_cache(id)
 
-      unless record
-        raise ActiveRecord::RecordNotFound, "Couldn't find #{@klass.name} with #{primary_key}=#{id}"
-      end
+      raise_record_not_found_exception!(id, 0, 1) unless record
 
       record
     end

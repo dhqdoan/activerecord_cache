@@ -40,7 +40,7 @@ class ActiveRecordCacheTest < ActiveSupport::TestCase
   test "#where(:id => id, :other => criteria) should NOT use the cache" do
     cache_records(1)
 
-    records = CachedRecord.where(:id => 1, :name => 'Bogus').all
+    records = CachedRecord.where(:id => 1, :name => 'Bogus').load
 
     assert records.empty?, 'should not find cached record'
   end

@@ -3,14 +3,12 @@ module ActiveRecordCache
     extend ActiveSupport::Concern
 
     included do
-      alias_method_chain :to_a, :caching
+      alias_method_chain :exec_queries, :caching
     end
 
-    def to_a_with_caching
-      previously_loaded = loaded?
-
-      records = to_a_without_caching
-      records.each(&:write_to_cache) if @klass.use_activerecord_cache && !previously_loaded && select_values.empty?
+    def exec_queries_with_caching
+      records = exec_queries_without_caching
+      records.each(&:write_to_cache) if @klass.use_activerecord_cache && select_values.empty?
 
       records
     end
