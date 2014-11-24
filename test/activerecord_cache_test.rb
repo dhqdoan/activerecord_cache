@@ -14,14 +14,29 @@ class ActiveRecordCacheTest < ActiveSupport::TestCase
     CachedRecord.find(1, 2)
   end
 
-  test "loading all records should persist them to the cache" do
-    Rails.cache.expects(:write).twice
+  test "loading all records should NOT persist them to the cache" do
+    Rails.cache.expects(:write).never
     CachedRecord.all.load    
   end
 
-  test "loading records using a where should persist them to the cache" do
-    Rails.cache.expects(:write).once
+  test "loading records using a where should NOT persist them to the cache" do
+    Rails.cache.expects(:write).never
     CachedRecord.where(:name => 'John').load    
+  end
+
+
+
+  # Errors should still be raised
+  test "loading missing records should still throw errors" do
+    bogus_id = 12345
+
+    assert_raises ActiveRecord::RecordNotFound do
+      CachedRecord.find(bogus_id)
+    end
+
+    assert_raises ActiveRecord::RecordNotFound do
+      CachedRecord.find([1, bogus_id])
+    end
   end
 
 
@@ -60,6 +75,15 @@ class ActiveRecordCacheTest < ActiveSupport::TestCase
     records = CachedRecord.where(:id => 1, :name => 'Bogus').load
 
     assert records.empty?, 'should not find cached record'
+  end
+
+  # where + id gets treated like a complex query
+  test "#where(:id => id) does NOT use the cache" do
+    cache_records(1)
+
+    assert_query_count 1 do
+      records = CachedRecord.where(:id => 1).load
+    end
   end
 
   test "#select(:id) should NOT use the cache" do

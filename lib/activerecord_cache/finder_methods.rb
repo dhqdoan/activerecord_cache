@@ -14,7 +14,7 @@ module ActiveRecordCache
 
       results = find_some_through_cache(ids)
 
-      raise_record_not_found_exception!(ids, result.size, ids.size) unless results.size == ids.size
+      raise_record_not_found_exception!(ids, results.size, ids.size) unless results.size == ids.size
 
       results
     end

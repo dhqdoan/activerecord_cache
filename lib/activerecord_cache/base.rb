@@ -32,7 +32,15 @@ module ActiveRecordCache
           raise ActiveRecordCache::CacheNotEnabled, message
         end
 
-        Rails.cache.read(cache_key(id)) || where(primary_key => id).first
+        record = Rails.cache.read(cache_key(id))
+
+        unless record
+          # use where to bypass cached finders
+          record = where(primary_key => id).first
+          record.write_to_cache if record
+        end
+
+        record
       end
 
       def find_some_through_cache(ids)
@@ -53,7 +61,12 @@ module ActiveRecordCache
         end
 
         if cache_misses.present?
-          records += where(primary_key => cache_misses).load
+          # use where to bypass cached finders
+          loaded_records = where(primary_key => cache_misses).load
+
+          loaded_records.each(&:write_to_cache)
+
+          records += loaded_records
         end
 
         records
