@@ -12,6 +12,13 @@ class ActiveRecordCache::Railtie < Rails::Railtie
       # FinderMethods only gets included in ActiveRecord::Relation, so extend it there.
       # This gets around some headaches caused by extending modules already included in other classes.
       ActiveRecord::Relation.send(:include, ActiveRecordCache::FinderMethods)
+
+      ActiveRecord::Base.class_eval do
+        class << self
+          prepend ActiveRecordCache::Core
+        end
+      end
+
     end
   end
   

@@ -4,6 +4,9 @@ class ActiveRecordCacheTest < ActiveSupport::TestCase
 
   setup do
     Rails.cache.clear
+
+    # Not sure why, but mocha expectations aren't being cleared between tests…
+    Mocha::Mockery.instance.stubba.unstub_all
   end
 
 

@@ -31,7 +31,7 @@ module ActiveRecordCache
 
     # only support the most basic lookups through the cache
     def cached_lookup_allowed?
-      @klass.use_activerecord_cache && arel.where_sql.nil? && arel.join_sql.nil? && @limit_value.nil? && @offset_value.nil?
+      @klass.use_activerecord_cache && arel.where_sql.nil? && arel.join_sources.empty? && @limit_value.nil? && @offset_value.nil?
     end
   end
 end
