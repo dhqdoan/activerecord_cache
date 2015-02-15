@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    activerecord_cache (0.0.9)
-      rails (~> 4.0)
+    activerecord_cache (0.0.10)
+      rails (~> 4.2)
 
 GEM
   remote: http://rubygems.org/
