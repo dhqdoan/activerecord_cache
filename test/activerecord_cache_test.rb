@@ -161,6 +161,13 @@ class ActiveRecordCacheTest < ActiveSupport::TestCase
     CachedRecord.find(1).destroy
   end
 
+  test "polymorphic fix" do
+    assert_equal 1, CachedTypeARecord.find(1).poly_record.id
+    assert_equal "CachedTypeARecord", CachedTypeARecord.find(1).poly_record.detail_type
+    assert_not_nil Rails.cache.read("CachedTypeARecord/1")
+    poly_record_id = PolyRecord.find(2).cached_type_a_record.poly_record.id
+    assert_equal 1, CachedTypeARecord.find(1).poly_record.id # would fail with 2 without fix in BelongsToAssociation.find_target_with_caching
+  end
 
 
   private
