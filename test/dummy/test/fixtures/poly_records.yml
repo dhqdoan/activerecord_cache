@@ -1,0 +1,14 @@
+type_a:
+  id: 1
+  name: poly_type_a
+  detail_type: CachedTypeARecord
+  detail_id: 1
+  cached_type_a_record_id: 1
+
+type_b:
+  id: 2
+  name: poly_type_b
+  detail_type: CachedTypeBRecord
+  detail_id: 1
+  cached_type_b_record_id: 1
+  cached_type_a_record_id: 1
